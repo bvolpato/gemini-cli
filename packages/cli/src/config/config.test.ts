@@ -519,9 +519,11 @@ describe('parseArguments', () => {
         expect(parsedArgs.prompt).toBe(expectedQuery);
         expect(parsedArgs.promptInteractive).toBeUndefined();
         if (expectedModel) {
+          // eslint-disable-next-line vitest/no-conditional-expect
           expect(parsedArgs.model).toBe(expectedModel);
         }
         if (debug) {
+          // eslint-disable-next-line vitest/no-conditional-expect
           expect(parsedArgs.debug).toBe(true);
         }
       },
@@ -2031,43 +2033,46 @@ describe('loadCliConfig with includeDirectories', () => {
     vi.restoreAllMocks();
   });
 
-  it.skip('should combine and resolve paths from settings and CLI arguments', async () => {
-    const mockCwd = path.resolve(path.sep, 'home', 'user', 'project');
-    process.argv = [
-      'node',
+  it.todo(
+    'should combine and resolve paths from settings and CLI arguments',
+    async () => {
+      const mockCwd = path.resolve(path.sep, 'home', 'user', 'project');
+      process.argv = [
+        'node',
 
-      'script.js',
-      '--include-directories',
-      `${path.resolve(path.sep, 'cli', 'path1')},${path.join(mockCwd, 'cli', 'path2')}`,
-    ];
-    const argv = await parseArguments(createTestMergedSettings());
-    const settings = createTestMergedSettings({
-      context: {
-        includeDirectories: [
-          path.resolve(path.sep, 'settings', 'path1'),
-          path.join(os.homedir(), 'settings', 'path2'),
-          path.join(mockCwd, 'settings', 'path3'),
-        ],
-      },
-    });
-    const config = await loadCliConfig(settings, 'test-session', argv);
-    const expected = [
-      mockCwd,
-      path.resolve(path.sep, 'cli', 'path1'),
-      path.join(mockCwd, 'cli', 'path2'),
-      path.resolve(path.sep, 'settings', 'path1'),
-      path.join(os.homedir(), 'settings', 'path2'),
-      path.join(mockCwd, 'settings', 'path3'),
-    ];
-    const directories = config.getWorkspaceContext().getDirectories();
-    expect(directories).toEqual([mockCwd]);
-    expect(config.getPendingIncludeDirectories()).toEqual(
-      expect.arrayContaining(expected.filter((dir) => dir !== mockCwd)),
-    );
-    expect(config.getPendingIncludeDirectories()).toHaveLength(
-      expected.length - 1,
-    );
-  });
+        'script.js',
+        '--include-directories',
+        `${path.resolve(path.sep, 'cli', 'path1')},${path.join(mockCwd, 'cli', 'path2')}`,
+      ];
+      const argv = await parseArguments(createTestMergedSettings());
+      const settings = createTestMergedSettings({
+        context: {
+          includeDirectories: [
+            path.resolve(path.sep, 'settings', 'path1'),
+            path.join(os.homedir(), 'settings', 'path2'),
+            path.join(mockCwd, 'settings', 'path3'),
+          ],
+        },
+      });
+      const config = await loadCliConfig(settings, 'test-session', argv);
+      const expected = [
+        mockCwd,
+        path.resolve(path.sep, 'cli', 'path1'),
+        path.join(mockCwd, 'cli', 'path2'),
+        path.resolve(path.sep, 'settings', 'path1'),
+        path.join(os.homedir(), 'settings', 'path2'),
+        path.join(mockCwd, 'settings', 'path3'),
+      ];
+      const directories = config.getWorkspaceContext().getDirectories();
+      expect(directories).toEqual([mockCwd]);
+      expect(config.getPendingIncludeDirectories()).toEqual(
+        expect.arrayContaining(expected.filter((dir) => dir !== mockCwd)),
+      );
+      expect(config.getPendingIncludeDirectories()).toHaveLength(
+        expected.length - 1,
+      );
+    },
+  );
 });
 
 describe('loadCliConfig compressionThreshold', () => {
@@ -2835,17 +2840,16 @@ describe('loadCliConfig approval mode', () => {
     expect(config.getApprovalMode()).toBe(ServerConfig.ApprovalMode.PLAN);
   });
 
-  it('should ignore "yolo" in settings.tools.approvalMode and fall back to DEFAULT', async () => {
+  it('should use "yolo" from settings.general.defaultApprovalMode', async () => {
     process.argv = ['node', 'script.js'];
     const settings = createTestMergedSettings({
-      tools: {
-        // @ts-expect-error: testing invalid value
-        approvalMode: 'yolo',
+      general: {
+        defaultApprovalMode: 'yolo',
       },
     });
     const argv = await parseArguments(settings);
     const config = await loadCliConfig(settings, 'test-session', argv);
-    expect(config.getApprovalMode()).toBe(ServerConfig.ApprovalMode.DEFAULT);
+    expect(config.getApprovalMode()).toBe(ServerConfig.ApprovalMode.YOLO);
   });
 
   it('should throw error when --approval-mode=plan is used but plan is disabled', async () => {

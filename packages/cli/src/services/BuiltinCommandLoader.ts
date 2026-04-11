@@ -60,6 +60,7 @@ import { tasksCommand } from '../ui/commands/tasksCommand.js';
 import { vimCommand } from '../ui/commands/vimCommand.js';
 import { setupGithubCommand } from '../ui/commands/setupGithubCommand.js';
 import { terminalSetupCommand } from '../ui/commands/terminalSetupCommand.js';
+import { usageCommand } from '../ui/commands/usageCommand.js';
 import { upgradeCommand } from '../ui/commands/upgradeCommand.js';
 
 /**
@@ -225,6 +226,7 @@ export class BuiltinCommandLoader implements ICommandLoader {
       vimCommand,
       setupGithubCommand,
       terminalSetupCommand,
+      usageCommand,
       ...(this.config?.getContentGeneratorConfig()?.authType ===
       AuthType.LOGIN_WITH_GOOGLE
         ? [upgradeCommand]

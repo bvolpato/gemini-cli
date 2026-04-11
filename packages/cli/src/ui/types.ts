@@ -224,6 +224,13 @@ export interface QuotaStats {
   resetTime?: string;
 }
 
+export type HistoryItemUsage = HistoryItemQuotaBase & {
+  type: 'usage';
+  quotas?: RetrieveUserQuotaResponse;
+  creditBalance?: number;
+  quotaToolOutput?: string;
+};
+
 export type HistoryItemStats = HistoryItemQuotaBase & {
   type: 'stats';
   duration: string;
@@ -392,6 +399,7 @@ export type HistoryItemWithoutId =
   | HistoryItemHelp
   | HistoryItemToolGroup
   | HistoryItemStats
+  | HistoryItemUsage
   | HistoryItemModelStats
   | HistoryItemToolStats
   | HistoryItemModel
@@ -418,6 +426,7 @@ export enum MessageType {
   ABOUT = 'about',
   HELP = 'help',
   STATS = 'stats',
+  USAGE = 'usage',
   MODEL_STATS = 'model_stats',
   TOOL_STATS = 'tool_stats',
   QUIT = 'quit',
@@ -462,6 +471,21 @@ export type Message =
       timestamp: Date;
       duration: string;
       content?: string;
+    }
+  | {
+      type: MessageType.USAGE;
+      timestamp: Date;
+      content?: string;
+      selectedAuthType?: string;
+      userEmail?: string;
+      tier?: string;
+      currentModel?: string;
+      creditBalance?: number;
+      quotas?: RetrieveUserQuotaResponse;
+      pooledRemaining?: number;
+      pooledLimit?: number;
+      pooledResetTime?: string;
+      quotaToolOutput?: string;
     }
   | {
       type: MessageType.MODEL_STATS;

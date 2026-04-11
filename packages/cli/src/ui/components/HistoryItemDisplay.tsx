@@ -20,6 +20,7 @@ import { WarningMessage } from './messages/WarningMessage.js';
 import { SubagentHistoryMessage } from './messages/SubagentHistoryMessage.js';
 import { Box } from 'ink';
 import { AboutBox } from './AboutBox.js';
+import { UsageDisplay } from './UsageDisplay.js';
 import { StatsDisplay } from './StatsDisplay.js';
 import { ModelStatsDisplay } from './ModelStatsDisplay.js';
 import { ToolStatsDisplay } from './ToolStatsDisplay.js';
@@ -161,6 +162,27 @@ export const HistoryItemDisplay: React.FC<HistoryItemDisplayProps> = ({
       )}
       {itemForDisplay.type === 'help' && commands && (
         <Help commands={commands} />
+      )}
+      {itemForDisplay.type === 'usage' && (
+        <UsageDisplay
+          selectedAuthType={itemForDisplay.selectedAuthType}
+          userEmail={itemForDisplay.userEmail}
+          tier={itemForDisplay.tier}
+          currentModel={itemForDisplay.currentModel}
+          creditBalance={itemForDisplay.creditBalance}
+          quotaToolOutput={itemForDisplay.quotaToolOutput}
+          quotaStats={
+            itemForDisplay.pooledRemaining !== undefined ||
+            itemForDisplay.pooledLimit !== undefined ||
+            itemForDisplay.pooledResetTime !== undefined
+              ? {
+                  remaining: itemForDisplay.pooledRemaining,
+                  limit: itemForDisplay.pooledLimit,
+                  resetTime: itemForDisplay.pooledResetTime,
+                }
+              : undefined
+          }
+        />
       )}
       {itemForDisplay.type === 'stats' && (
         <StatsDisplay

@@ -178,6 +178,20 @@ export const useSlashCommandProcessor = (
           type: 'stats',
           duration: message.duration,
         };
+      } else if (message.type === MessageType.USAGE) {
+        historyItemContent = {
+          type: 'usage',
+          selectedAuthType: message.selectedAuthType,
+          userEmail: message.userEmail,
+          tier: message.tier,
+          currentModel: message.currentModel,
+          creditBalance: message.creditBalance,
+          quotas: message.quotas,
+          pooledRemaining: message.pooledRemaining,
+          pooledLimit: message.pooledLimit,
+          pooledResetTime: message.pooledResetTime,
+          quotaToolOutput: message.quotaToolOutput,
+        };
       } else if (message.type === MessageType.MODEL_STATS) {
         historyItemContent = {
           type: 'model_stats',
