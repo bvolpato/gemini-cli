@@ -20,7 +20,8 @@
     "typecheck": "tsc --noEmit"
   },
   "files": [
-    "dist"
+    "dist",
+    "src"
   ],
   "dependencies": {
     "@a2a-js/sdk": "0.3.11",
@@ -102,6 +103,7 @@
   },
   "devDependencies": {
     "@google/gemini-cli-test-utils": "file:../test-utils",
+    "@types/node": "^20.11.24",
     "@types/fast-levenshtein": "^0.0.4",
     "@types/js-yaml": "^4.0.9",
     "@types/json-stable-stringify": "^1.1.0",
